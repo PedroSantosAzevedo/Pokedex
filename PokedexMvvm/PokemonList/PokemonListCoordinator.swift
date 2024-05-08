@@ -8,10 +8,8 @@
 import Foundation
 import UIKit
 
-struct PokemonListCoordinator: CoordinatorProtocol {
+struct PokemonListCoordinator {
         
-    var childCoodinators = [CoordinatorProtocol]()
-    
     var naviationController: UINavigationController
     
     init(navigationController: UINavigationController) {

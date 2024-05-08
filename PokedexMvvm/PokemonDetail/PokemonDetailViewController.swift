@@ -11,10 +11,11 @@ import UIKit
 final class PokemonDetailViewController: UIViewController {
     
     var DetailView:PokemonDetailView { return self.view as! PokemonDetailView }
+    var viewModel: PokemonDetailViewModelProtocol
     
     //MARK: - Init
-    init() {
-//        self.viewModel = viewModel
+    init(viewModel: PokemonDetailViewModelProtocol) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     

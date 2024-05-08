@@ -6,9 +6,7 @@
 //
 import UIKit
 
-struct PokemonDetailCoordinator: CoordinatorProtocol{
-    
-    var childCoodinators = [CoordinatorProtocol]()
+struct PokemonDetailCoordinator{
     
     var naviationController: UINavigationController
     
@@ -16,12 +14,13 @@ struct PokemonDetailCoordinator: CoordinatorProtocol{
         self.naviationController = navigationController
     }
     
-    func start() {
-        naviationController.pushViewController(buildDetail(), animated: true)
+    func start(pokemon: PokemonDetail) {
+        naviationController.pushViewController(buildDetail(pokemon: pokemon), animated: true)
     }
     
-    func buildDetail() -> UIViewController {
-        let viewController = PokemonDetailViewController()
+    func buildDetail(pokemon: PokemonDetail) -> UIViewController {
+        let viewModel = PokemonDetailViewModel(pokemon: pokemon)
+        let viewController = PokemonDetailViewController(viewModel: viewModel)
         return viewController
     }
     

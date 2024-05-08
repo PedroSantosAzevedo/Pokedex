@@ -14,17 +14,13 @@ struct PokemonListRouter: RouterProtocol {
     
     
     var routes: [String : ((UINavigationController?, [String : Any]?) -> Void)] = [detailRoute:goToDetail]
-    
-    func goTo(path: String, in navigation: UINavigationController?, parameters: [String : Any]?) {
-        routes[path]?(navigation,parameters)
-    }
 
     static func goToDetail(in navigation: UINavigationController?, with parameters: [String : Any]?) {
-        guard let nav = navigation else {
+        guard let nav = navigation,
+              let pokemon = parameters?["pokemonDetail"] as? PokemonDetail else {
             return
         }
-        PokemonDetailCoordinator(navigationController: nav).start()
-        
+        PokemonDetailCoordinator(navigationController: nav).start(pokemon: pokemon)
     }
     
     

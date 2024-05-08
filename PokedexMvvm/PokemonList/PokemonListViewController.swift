@@ -75,8 +75,8 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        debugPrint(viewModel.sortedList[indexPath.row].name)
-        router.goTo(path: PokemonListRouter.detailRoute, in: self.navigationController, parameters: nil)
+        let dict = ["pokemonDetail" : viewModel.sortedList[indexPath.row]]
+        router.goTo(path: PokemonListRouter.detailRoute, in: self.navigationController, parameters: dict)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
