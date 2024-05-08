@@ -59,6 +59,17 @@ class PokemonListTableViewCell:UITableViewCell{
         return image
     }()
     
+
+    lazy var ballButton: UIButton = {
+        let image = UIButton()
+        image.backgroundColor = .clear
+        image.tintColor = .white
+        image.setImage(UIImage(named: "addCircle"), for: .normal)
+        image.addTarget(self, action: #selector(capturePokemon), for: .touchUpInside)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
     lazy var numberLabel: UILabel = {
         let label = UILabel()
         label.alpha = 0
@@ -67,7 +78,7 @@ class PokemonListTableViewCell:UITableViewCell{
         label.minimumScaleFactor = 0.6
         label.numberOfLines = 5
         label.lineBreakMode = .byTruncatingHead
-        label.textColor = .lightGray
+        label.textColor = .white
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -77,6 +88,7 @@ class PokemonListTableViewCell:UITableViewCell{
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
+        contentView.isUserInteractionEnabled = false
         setupView()
         self.selectionStyle = .none
   
@@ -91,13 +103,21 @@ class PokemonListTableViewCell:UITableViewCell{
         titleLabel.text = ""
     }
     
+    @objc func capturePokemon() {
+        ballButton.setImage(UIImage(named: "pokeballColor"), for: .normal)
+    }
     
     func setUp(with pokemon: PokemonDetail){
         getImage(for: pokemon)
         getTitle(for: pokemon)
         getNumber(for: pokemon)
+        getColor(for: pokemon)
     }
 
+    func getColor(for pokemon: PokemonDetail) {
+        containerView.backgroundColor = UIColor().getColorForType(type: pokemon.types[0].type.name, alpha: 0.2)
+    }
+    
     private func getImage(for pokemon: PokemonDetail) {
 
         guard let imageString = pokemon.sprite?.url else {return}
@@ -118,7 +138,7 @@ class PokemonListTableViewCell:UITableViewCell{
     
     func appear() {
         UIView.animate(withDuration: 1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.allowUserInteraction, .curveEaseInOut]) {
-            self.leadingContraint?.constant = 8
+            self.leadingContraint?.constant = 16
             self.layoutIfNeeded()
         }
             UIView.animate(withDuration: 2, animations: {
@@ -142,6 +162,7 @@ extension PokemonListTableViewCell: ViewCodeProtocol {
     func setupHierarchy() {
         contentView.addSubview(containerView)
         containerView.addSubview(pokeImage)
+        containerView.addSubview(ballButton)
         contentView.addSubview(stackView)
         stackView.addArrangedSubview(numberLabel)
         stackView.addArrangedSubview(titleLabel)
@@ -149,20 +170,27 @@ extension PokemonListTableViewCell: ViewCodeProtocol {
     
     func setupConstraints() {
         containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        leadingContraint = containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8)
+        leadingContraint = containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16)
         leadingContraint?.isActive = true
-        containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 16).isActive = true
         containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
         
-        pokeImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        pokeImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        pokeImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        pokeImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
         pokeImage.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         pokeImage.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 32).isActive = true
+        stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16).isActive = true
+        
+        ballButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        ballButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        ballButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        ballButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -32).isActive = true
 
-        stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8).isActive = true
+//        stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16).isActive = true
         stackView.leadingAnchor.constraint(equalTo: pokeImage.trailingAnchor, constant: 16).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: ballButton.leadingAnchor).isActive = true
+//        stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16).isActive = true
         
     }
     

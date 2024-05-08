@@ -7,6 +7,27 @@
 
 import Foundation
 
+enum PokemonTypeName: String, Decodable {
+    case normal
+    case grass
+    case fire
+    case water
+    case fighting
+    case flying
+    case poison
+    case ground
+    case rock
+    case bug
+    case ghost
+    case electric
+    case psychic
+    case ice
+    case dragon
+    case dark
+    case steel
+    case fairy
+}
+
 struct PokemonDetail: Decodable {
     let id: Int
     let name: String
@@ -15,10 +36,10 @@ struct PokemonDetail: Decodable {
     let baseExperience: Int
     let sprite: Sprite?
     var hasShown = false
-
+    var types: [PokemonType]
 
     private enum CodingKeys: String, CodingKey {
-        case id, name, weight, height
+        case id, name, weight, height, types
         case baseExperience = "base_experience"
         case sprite = "sprites"
     }
@@ -37,4 +58,14 @@ struct Sprite: Decodable {
     private enum CodingKeys: String, CodingKey {
         case url = "front_default"
     }
+}
+
+struct PokemonType: Decodable {
+    let slot: Int
+    let type: PokemonTypeSlot
+}
+
+struct PokemonTypeSlot: Decodable {
+    let name: PokemonTypeName
+    let url: String
 }
