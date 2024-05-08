@@ -11,8 +11,8 @@ import UIKit
 protocol ViewCodeProtocol {
     
     func setupView()
-    func setupConstraints()
     func setupHierarchy()
+    func setupConstraints()
 }
 
 extension ViewCodeProtocol{    

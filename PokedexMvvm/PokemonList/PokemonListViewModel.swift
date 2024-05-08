@@ -19,12 +19,22 @@ final class PokemonListViewModel {
     var list: [PokemonDetail] = []
     var limit: Int = 100
     var pagination: Int = 0
+    var isLoading = false
     
-    var sortedList: [PokemonDetail] {
-        return list.sorted {$0.id < $1.id}
+    var sortedList: [PokemonDetail]  {
+        get {
+            return list.sorted {$0.id < $1.id}
+           }
+           set {
+               self.list = newValue
+           }
     }
     
     func retrieveCompleteList() {
+        if isLoading {
+            return
+        }
+        isLoading = true
         dispatchGroup.enter()
         service.getList(pagination: pagination, limit: limit) { result in
             switch result {
@@ -53,6 +63,7 @@ final class PokemonListViewModel {
             [weak self] in
             self?.delegate?.updateList()
             self?.updatePagination()
+            self?.isLoading = false
             
 
         }

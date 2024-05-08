@@ -14,6 +14,7 @@ struct PokemonDetail: Decodable {
     let height: Int
     let baseExperience: Int
     let sprite: Sprite?
+    var hasShown = false
 
 
     private enum CodingKeys: String, CodingKey {

@@ -10,8 +10,6 @@ import Alamofire
 
 final class PokemonListService {
     
-
-    
     func getList(pagination:Int, limit: Int,completion: @escaping(Result<APIResponse,AFError>) -> Void) {
         
         let endpoint = Endpoint.pokemon(limit, pagination)
@@ -46,7 +44,5 @@ final class PokemonListService {
                 completion(.failure(error))
             }
         }
-        
     }
-    
 }
