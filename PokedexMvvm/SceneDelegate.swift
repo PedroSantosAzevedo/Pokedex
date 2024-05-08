@@ -18,13 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.windowScene = windowScene
         
-        let mainViewController = UIViewController()
-        mainViewController.view.backgroundColor = .purple
-        
-        let navigationController = PokemonListBuilder().build()
+        let navigationController = UINavigationController()
+        PokemonListCoordinator(navigationController: navigationController).start()
 
-        navigationController.navigationBar.barStyle = .black
-        navigationController.navigationBar.tintColor = .white
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

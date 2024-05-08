@@ -12,9 +12,21 @@ final class PokemonListViewController: UIViewController {
     
     
     //MARK: - Properties
-    var listView:PokemonListView {return self.view as! PokemonListView}
-    var viewModel = PokemonListViewModel()
-
+    var listView:PokemonListView { return self.view as! PokemonListView }
+    var viewModel: PokemonListViewModelProtocol
+    var router: RouterProtocol
+    
+    //MARK: - Init
+    init(viewModel: PokemonListViewModelProtocol, router: RouterProtocol) {
+        self.viewModel = viewModel
+        self.router = router
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +76,7 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debugPrint(viewModel.sortedList[indexPath.row].name)
+        router.goTo(path: PokemonListRouter.detailRoute, in: self.navigationController, parameters: nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

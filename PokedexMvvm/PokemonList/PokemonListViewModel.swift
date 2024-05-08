@@ -11,7 +11,14 @@ protocol PokemonListViewModelDelegate: AnyObject {
     func updateList()
 }
 
-final class PokemonListViewModel {
+protocol PokemonListViewModelProtocol: AnyObject {
+    var delegate: PokemonListViewModelDelegate? { get set }
+    var isLoading: Bool { get set }
+    var sortedList: [PokemonDetail] { get set }
+    func retrieveCompleteList()
+}
+
+final class PokemonListViewModel: PokemonListViewModelProtocol {
     
     weak var delegate: PokemonListViewModelDelegate?
     var service = PokemonListService()

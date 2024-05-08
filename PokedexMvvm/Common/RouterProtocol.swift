@@ -9,7 +9,10 @@ import UIKit
 
 protocol RouterProtocol {
     
-    var navigationController: UINavigationController? { get set }
-    func route()
+//    var navigationController: UINavigationController? { get set }
+    func goTo(path: String, in navigationController: UINavigationController?, parameters: [String : Any]?)
+    var routes: [String : ((UINavigationController?, [String : Any]?) -> Void)] { get set }
+    
+    
     
 }

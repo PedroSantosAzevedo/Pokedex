@@ -8,8 +8,7 @@
 import Foundation
 import UIKit
 
-class PokemonListView: UIView {
-    
+final class PokemonListView: UIView {
     
     lazy var tableView:UITableView = {
         let tableView = UITableView()
@@ -29,13 +28,14 @@ class PokemonListView: UIView {
         
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func layoutSubviews() {
         setupView()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
 
 extension PokemonListView: ViewCodeProtocol {
