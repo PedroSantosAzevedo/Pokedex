@@ -187,10 +187,8 @@ extension PokemonListTableViewCell: ViewCodeProtocol {
         ballButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         ballButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -32).isActive = true
 
-//        stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16).isActive = true
         stackView.leadingAnchor.constraint(equalTo: pokeImage.trailingAnchor, constant: 16).isActive = true
         stackView.trailingAnchor.constraint(equalTo: ballButton.leadingAnchor).isActive = true
-//        stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16).isActive = true
         
     }
     

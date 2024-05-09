@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum PokemonTypeName: String, Decodable {
     case normal
@@ -26,6 +27,10 @@ enum PokemonTypeName: String, Decodable {
     case dark
     case steel
     case fairy
+    
+    func getColor(alpha: CGFloat) -> UIColor {
+        return UIColor().getColorForType(type: self, alpha: alpha)
+    }
 }
 
 struct PokemonDetail: Decodable {
