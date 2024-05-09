@@ -20,6 +20,11 @@ final class PokemonDetailViewController: UIViewController {
         self.viewModel.delegate = self
         viewModel.setPokemonView()
         NotificationCenter.default.addObserver(self, selector: #selector(updateView), name: UIDevice.orientationDidChangeNotification, object: nil)
+        setupPageController()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     required init?(coder: NSCoder) {
@@ -30,6 +35,11 @@ final class PokemonDetailViewController: UIViewController {
     override func loadView() {
         super.loadView()
         self.view = PokemonDetailView()
+
+    }
+    
+    private func setupPageController() {
+        detailView.scrollView.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,5 +58,12 @@ extension PokemonDetailViewController: PokemonDetailViewModelDelegate {
     func setPokemonView(for pokemon: PokemonDetail) {
         detailView.setView(pokemon: pokemon)
         debugPrint("setView")
+    }
+}
+
+extension PokemonDetailViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let pageNumber = round(scrollView.contentOffset.x / scrollView.frame.size.width)
+        detailView.pageController.currentPage = Int(pageNumber)
     }
 }
