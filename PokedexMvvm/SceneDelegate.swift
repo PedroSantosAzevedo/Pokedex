@@ -21,6 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navigationController = UINavigationController()
         PokemonListCoordinator(navigationController: navigationController).start()
 
+        UINavigationBar.appearance().barTintColor = .clear
+        UINavigationBar.appearance().tintColor = .black
+//        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.clear]
+        UINavigationBar.appearance().isTranslucent = true
+        
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

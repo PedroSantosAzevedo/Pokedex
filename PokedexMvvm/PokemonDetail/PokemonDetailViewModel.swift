@@ -44,4 +44,5 @@ final class PokemonDetailViewModel: PokemonDetailViewModelProtocol {
         delegate?.setPokemonStats(for: specs)
     }
     
+    
 }
