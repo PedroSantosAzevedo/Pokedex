@@ -24,7 +24,7 @@ final class PokemonListView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame:frame)
-        self.backgroundColor = .white
+        self.backgroundColor = Theme.Colors.background.color
         
     }
     

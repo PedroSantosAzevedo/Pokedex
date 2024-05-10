@@ -29,8 +29,9 @@ final class PokemonDetailView: UIView {
         label.alpha = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.textColor = .black
-        label.adjustsFontSizeToFitWidth = true
+        label.font = Theme.Fonts.sugarBomb.getFont(size: 30)
+        label.textColor = .white
+        label.adjustsFontSizeToFitWidth = false
         return label
     }()
     
@@ -38,7 +39,7 @@ final class PokemonDetailView: UIView {
         let view = UIView()
         view.alpha = 0.7
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         view.layer.cornerRadius = 16
         return view
     }()
@@ -55,10 +56,22 @@ final class PokemonDetailView: UIView {
         return image
     }()
     
+    lazy var ballImage: UIImageView = {
+        let image = UIImageView()
+        image.backgroundColor = .clear
+        image.tintColor = .white
+        image.image = UIImage(named: "detailBall")
+        image.contentMode = .scaleToFill
+        image.clipsToBounds = true
+        image.alpha = 0.5
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
     lazy var bottomContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = Theme.Colors.background.color
         view.layer.cornerRadius = 16
         return view
     }()
@@ -115,8 +128,9 @@ final class PokemonDetailView: UIView {
 extension PokemonDetailView: ViewCodeProtocol {
     func setupHierarchy() {
         addSubview(containerView)
+        containerView.addSubview(ballImage)
         containerView.addSubview(titleContainerView)
-        titleContainerView.addSubview(titleLabel)
+        addSubview(titleLabel)
         addSubview(bottomContainerView)
         addSubview(pokeImage)
         bottomContainerView.addSubview(pokemonDetailContainerView)
@@ -125,20 +139,21 @@ extension PokemonDetailView: ViewCodeProtocol {
     
     func setupConstraints() {
         
+        containerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
+        containerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        
         titleContainerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8).isActive = true
-        titleContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24).isActive = true
-        titleContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24).isActive = true
+        titleContainerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16).isActive = true
                
         titleLabel.centerXAnchor.constraint(equalTo: titleContainerView.centerXAnchor).isActive = true
         titleLabel.centerYAnchor.constraint(equalTo: titleContainerView.centerYAnchor).isActive = true
         titleLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         titleLabel.topAnchor.constraint(equalTo: titleContainerView.topAnchor, constant: 8).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: titleContainerView.bottomAnchor, constant: -8).isActive = true
-        
-        containerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
-        containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: titleContainerView.leadingAnchor, constant: 8).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: titleContainerView.trailingAnchor, constant: -8).isActive = true
         
         bottomViewTopContraint = bottomContainerView.topAnchor.constraint(equalTo: topAnchor, constant: height)
         bottomViewTopContraint?.isActive = true
@@ -150,6 +165,13 @@ extension PokemonDetailView: ViewCodeProtocol {
         pokeImage.widthAnchor.constraint(equalToConstant: height/4).isActive = true
         pokeImage.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
         pokeImage.centerYAnchor.constraint(equalTo: bottomContainerView.topAnchor).isActive = true
+        
+        ballImage.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+        ballImage.heightAnchor.constraint(equalToConstant: height/3).isActive = true
+        ballImage.widthAnchor.constraint(equalToConstant: height/3).isActive = true
+        ballImage.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 64).isActive = true
+        
+        
         
         pokemonDetailContainerView.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 16).isActive = true
         pokemonDetailContainerView.leadingAnchor.constraint(equalTo: bottomContainerView.leadingAnchor, constant: 0).isActive = true

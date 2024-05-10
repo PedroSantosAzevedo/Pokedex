@@ -16,7 +16,7 @@ final class PokemonDetailItemView: UIView {
     lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .gray
+        view.backgroundColor = .white
         view.layer.cornerRadius = 16
         return view
     }()
@@ -27,14 +27,14 @@ final class PokemonDetailItemView: UIView {
         label.text = "Title"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.textColor = .white
+        label.textColor = Theme.Colors.onBackGround.color
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     lazy var pokeImage: UIImageView = {
         let image = UIImageView()
-        image.backgroundColor = .white
+        image.backgroundColor = .clear
         image.tintColor = .white
         image.image = UIImage(named: "pokeballColor")
         image.contentMode = .scaleAspectFit
@@ -48,16 +48,17 @@ final class PokemonDetailItemView: UIView {
         label.text = "Value"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.textColor = .white
+        label.textColor = Theme.Colors.onBackGround.color
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     //MARK: - Init
-    convenience init(field: String, value: String) {
+    convenience init(field: String, value: String, image: String) {
         self.init()
         self.titleLabel.text = field
         self.valueLabel.text = value
+        self.pokeImage.image = UIImage(named: image)
     }
     
     

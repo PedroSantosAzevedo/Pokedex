@@ -75,6 +75,20 @@ enum PokemonDetailSpecField: CaseIterable {
 
     var image: String {
         switch self {
+        case .type1, .type2:
+            return "pokeType"
+        case .ability1, .ability2:
+            return "ability"
+        case .defense , .specialDefense:
+            return "defense"
+        case .attack, .specialAttack:
+            return "specialAttack"
+        case .height, .weight:
+            return "weight"
+        case .hp:
+            return "hp"
+        case .speed:
+            return "speed"
         default:
             return "pokeballColor"
         }

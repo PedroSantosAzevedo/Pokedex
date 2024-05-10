@@ -75,7 +75,7 @@ class PokemonDetailContainerView: UIView {
         pokemonPageView1.widthAnchor.constraint(equalToConstant: viewWidth - 16).isActive = true
         
         detailList.forEach { model in
-            pokemonPageView1.addDetailView(view: PokemonDetailItemView(field: model.field.field, value: model.value))
+            pokemonPageView1.addDetailView(view: PokemonDetailItemView(field: model.field.field, value: model.value, image: model.field.image))
         }
     }
 
