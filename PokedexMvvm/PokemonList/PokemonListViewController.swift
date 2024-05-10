@@ -31,10 +31,13 @@ final class PokemonListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view = PokemonListView()
-        viewModel.retrieveCompleteList()
+//        viewModel.retrieveCompleteList()
         setupTableViewDelegates()
         viewModel.delegate = self
         
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.retrieveCompleteList()
     }
     
     func setupTableViewDelegates() {
@@ -58,13 +61,13 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PokemonListTableViewCell.reusableIdentifier, for: indexPath) as? PokemonListTableViewCell else { return UITableViewCell() }
-        cell.setUp(with: viewModel.sortedList[indexPath.row])
+        cell.setUp(with: viewModel.sortedList[indexPath.row], indexPath: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         guard let cell = cell as? PokemonListTableViewCell else { return }
-        
+        cell.delegate = self
         cell.shrink(hasShown: viewModel.sortedList[indexPath.row].hasShown)
         cell.appear()
         viewModel.sortedList[indexPath.row].hasShown = true
@@ -94,5 +97,15 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
 extension PokemonListViewController: PokemonListViewModelDelegate {
     func updateList() {
         listView.tableView.reloadData()
+    }
+}
+
+
+extension PokemonListViewController:PokemonListTableViewCellDelegate {
+    func didSelectFav(indexPath: IndexPath?) {
+        guard let indexPath = indexPath else {
+            return
+        }
+        viewModel.setSaved(index: indexPath.row)
     }
 }

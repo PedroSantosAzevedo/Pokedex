@@ -18,15 +18,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.windowScene = windowScene
         
-        let navigationController = UINavigationController()
-        PokemonListCoordinator(navigationController: navigationController).start()
+        let tabBar = UITabBarController()
+    
+        
+        let listNav = UINavigationController()
+        PokemonListCoordinator(navigationController: listNav).start()
+        listNav.tabBarItem.title = "List"
+        
+        let favController = UINavigationController()
+        favController.pushViewController(PokemonListCoordinator.buildFavList(), animated: true)
+        favController.tabBarItem.title = "Fav"
+        tabBar.viewControllers = [listNav,favController]
 
         UINavigationBar.appearance().barTintColor = .clear
         UINavigationBar.appearance().tintColor = .black
-//        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.clear]
         UINavigationBar.appearance().isTranslucent = true
         
-        window?.rootViewController = navigationController
+        window?.rootViewController = tabBar
         window?.makeKeyAndVisible()
     }
 

@@ -10,14 +10,19 @@ import UIKit
 import Kingfisher
 import SwiftUI
 
+protocol PokemonListTableViewCellDelegate: AnyObject {
+    func didSelectFav(indexPath: IndexPath?)
+}
 
 class PokemonListTableViewCell:UITableViewCell{
     
     //MARK:- Variables
     static let reusableIdentifier = "PokemonListTableViewCell"
     
+    weak var delegate: PokemonListTableViewCellDelegate?
     var leadingContraint: NSLayoutConstraint?
     var hasShown = false
+    var indexPath: IndexPath?
     
     //MARK:- Views
     
@@ -64,7 +69,7 @@ class PokemonListTableViewCell:UITableViewCell{
         let image = UIButton()
         image.backgroundColor = .clear
         image.tintColor = .white
-        image.setImage(UIImage(named: "addCircle"), for: .normal)
+//        image.setImage(UIImage(named: "addCircle"), for: .normal)
         image.addTarget(self, action: #selector(capturePokemon), for: .touchUpInside)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
@@ -88,7 +93,6 @@ class PokemonListTableViewCell:UITableViewCell{
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
-        contentView.isUserInteractionEnabled = false
         setupView()
         self.selectionStyle = .none
   
@@ -104,14 +108,22 @@ class PokemonListTableViewCell:UITableViewCell{
     }
     
     @objc func capturePokemon() {
+        delegate?.didSelectFav(indexPath: self.indexPath)
         ballButton.setImage(UIImage(named: "pokeballColor"), for: .normal)
     }
     
-    func setUp(with pokemon: PokemonDetail){
+    func setUp(with pokemon: PokemonDetail, indexPath: IndexPath){
         getImage(for: pokemon)
         getTitle(for: pokemon)
         getNumber(for: pokemon)
         getColor(for: pokemon)
+        getFav(for: pokemon)
+        self.indexPath = indexPath
+    }
+    
+    func getFav(for pokemon: PokemonDetail) {
+        let imageName =  pokemon.isFav ?  "favBall" : "notFavBall"
+        ballButton.setImage(UIImage(named: imageName), for: .normal)
     }
 
     func getColor(for pokemon: PokemonDetail) {
@@ -188,7 +200,7 @@ extension PokemonListTableViewCell: ViewCodeProtocol {
         ballButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -32).isActive = true
 
         stackView.leadingAnchor.constraint(equalTo: pokeImage.trailingAnchor, constant: 16).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: ballButton.leadingAnchor).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: ballButton.leadingAnchor, constant: -16).isActive = true
         
     }
     

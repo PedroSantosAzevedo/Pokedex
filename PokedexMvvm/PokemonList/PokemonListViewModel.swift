@@ -16,6 +16,7 @@ protocol PokemonListViewModelProtocol: AnyObject {
     var isLoading: Bool { get set }
     var sortedList: [PokemonDetail] { get set }
     func retrieveCompleteList()
+    func setSaved(index: Int)
 }
 
 final class PokemonListViewModel: PokemonListViewModelProtocol {
@@ -37,45 +38,57 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
         }
     }
     
-    func retrieveCompleteList() {
-
-        if isLoading {
-            return
-        }
-        isLoading = true
-        dispatchGroup.enter()
-        service.getList(pagination: pagination, limit: limit) { result in
-            switch result {
-            case .success(let response):
-                response.results.forEach { item in
-                    self.dispatchGroup.enter()
-                    self.service.getPokemonDetail(url: item.name) { detailResult in
-                        switch detailResult {
-                        case .success(let detail):
-                            self.list.append(detail)
-                            self.dispatchGroup.leave()
-                        case .failure(_):
-                            debugPrint("error")
-                            self.dispatchGroup.leave()
-                        }
-                    }
+    private func retrieveListDetail(_ response: (APIResponse)) {
+        
+        response.results.forEach { item in
+            self.dispatchGroup.enter()
+            self.service.getPokemonDetail(url: item.name) { detailResult in
+                switch detailResult {
+                case .success(let detail):
+                    self.list.append(detail)
+                    self.dispatchGroup.leave()
+                case .failure(_):
+                    debugPrint("error")
+                    self.dispatchGroup.leave()
                 }
-            case .failure(_):
-                debugPrint("error")
-             
             }
-            self.dispatchGroup.leave()
         }
-
+        
         dispatchGroup.notify(queue: .main) {
             [weak self] in
             self?.delegate?.updateList()
             self?.updatePagination()
             self?.isLoading = false
-
-
         }
+        
+        
+    }
+    
+    func retrieveCompleteList() {
 
+        if isLoading {
+            return
+        }
+        
+        isLoading = true
+        service.getList(pagination: pagination, limit: limit) { result in
+            switch result {
+            case .success(let response):
+                self.retrieveListDetail(response)
+            case .failure(_):
+                debugPrint("error")
+             
+            }
+        }
+    }
+    
+    func setSaved(index: Int) {
+        guard let pokemon = sortedList[safe: index] else { return }
+        if pokemon.isFav {
+            FavoriteManager.removeModel(pokemon)
+        } else {
+            FavoriteManager.saveModels([pokemon])
+        }
     }
     
     

@@ -35,6 +35,7 @@ final class PokemonListService {
 
             if let error = response.error {
                 completion(.failure(error))
+                return
             }
 
             switch response.result {

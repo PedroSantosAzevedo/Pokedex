@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct APIResponse: Decodable {
+struct APIResponse: Codable {
     let next: String
     let results: [APIItem]
 }
 
 // MARK: -
-struct APIItem: Decodable {
+struct APIItem: Codable {
     let name: String
     let url: String
 }

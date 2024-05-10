@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum PokemonTypeName: String, Decodable {
+enum PokemonTypeName: String, Codable {
     case normal
     case grass
     case fire
@@ -33,7 +33,7 @@ enum PokemonTypeName: String, Decodable {
     }
 }
 
-enum PokemonStats: String, Decodable {
+enum PokemonStats: String, Codable {
     case hp
     case attack
     case defense
@@ -64,7 +64,7 @@ enum PokemonStats: String, Decodable {
     
 }
 
-struct PokemonDetail: Decodable {
+struct PokemonDetail: Codable {
     let id: Int
     let name: String
     let weight: Int
@@ -75,6 +75,7 @@ struct PokemonDetail: Decodable {
     var types: [PokemonType]
     var abilities: [Ability]
     var stats: [Stat]
+    var isFav = false
     
     private enum CodingKeys: String, CodingKey {
         case id, name, weight, height, types, abilities, stats
@@ -90,7 +91,7 @@ extension PokemonDetail: Equatable {
     }
 }
 
-struct Sprite: Decodable {
+struct Sprite: Codable {
     let url: String
     let other: OtherSprites
     
@@ -100,7 +101,7 @@ struct Sprite: Decodable {
     }
 }
 
-struct OtherSprites: Decodable {
+struct OtherSprites: Codable {
     let dreamSprite: DreamSprite
     
     private enum CodingKeys: String, CodingKey {
@@ -108,7 +109,7 @@ struct OtherSprites: Decodable {
     }
 }
 
-struct DreamSprite: Decodable {
+struct DreamSprite: Codable {
     let url: String
     
     private enum CodingKeys: String, CodingKey {
@@ -116,21 +117,21 @@ struct DreamSprite: Decodable {
     }
 }
 
-struct PokemonType: Decodable {
+struct PokemonType: Codable {
     let slot: Int
     let type: PokemonTypeSlot
 }
 
-struct PokemonTypeSlot: Decodable {
+struct PokemonTypeSlot: Codable {
     let name: PokemonTypeName
     let url: String
 }
 
-struct Ability: Decodable {
+struct Ability: Codable {
     let ability: APIItem
 }
 
-struct Stat: Decodable {
+struct Stat: Codable {
     let stat: StatSlot
     let value: Int
     
@@ -140,7 +141,7 @@ struct Stat: Decodable {
     }
 }
 
-struct StatSlot: Decodable {
+struct StatSlot: Codable {
     let name: PokemonStats
     let url: String
 }
