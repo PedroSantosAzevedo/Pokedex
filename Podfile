@@ -8,8 +8,9 @@ target 'PokedexMvvm' do
   # Pods for PokedexMvvm
 
 	pod 'Kingfisher'
-  	pod 'Alamofire'
-
+  pod 'Alamofire'
+  pod 'SVGKit'
+  
   target 'PokedexMvvmTests' do
     inherit! :search_paths
     # Pods for testing

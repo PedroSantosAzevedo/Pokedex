@@ -27,9 +27,19 @@ final class PokemonDetailItemView: UIView {
         label.text = "Title"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.textColor = .black
+        label.textColor = .white
         label.adjustsFontSizeToFitWidth = true
         return label
+    }()
+    
+    lazy var pokeImage: UIImageView = {
+        let image = UIImageView()
+        image.backgroundColor = .white
+        image.tintColor = .white
+        image.image = UIImage(named: "pokeballColor")
+        image.contentMode = .scaleAspectFit
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
     }()
     
     lazy var valueLabel: UILabel = {
@@ -38,7 +48,7 @@ final class PokemonDetailItemView: UIView {
         label.text = "Value"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.textColor = .black
+        label.textColor = .white
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -46,8 +56,8 @@ final class PokemonDetailItemView: UIView {
     //MARK: - Init
     convenience init(field: String, value: String) {
         self.init()
-//
-        
+        self.titleLabel.text = field
+        self.valueLabel.text = value
     }
     
     
@@ -68,21 +78,27 @@ extension PokemonDetailItemView: ViewCodeProtocol {
     func setupHierarchy() {
         addSubview(containerView)
         containerView.addSubview(titleLabel)
+        containerView.addSubview(pokeImage)
         containerView.addSubview(valueLabel)
     }
     
     func setupConstraints() {
-        containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+        containerView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         leadingContraint = containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         leadingContraint?.isActive = true
         containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+
+        pokeImage.topAnchor.constraint(equalTo: containerView.topAnchor,constant: 8).isActive = true
+        pokeImage.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,constant: 16).isActive = true
+        pokeImage.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,constant: -8).isActive = true
+        pokeImage.heightAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
+        pokeImage.widthAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
+        
         
         titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor,constant: 8).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,constant: 16).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: pokeImage.trailingAnchor,constant: 16).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,constant: -8).isActive = true
-        
         
         valueLabel.topAnchor.constraint(equalTo: containerView.topAnchor,constant: 8).isActive = true
         valueLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,constant: -16).isActive = true

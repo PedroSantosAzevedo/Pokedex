@@ -24,20 +24,21 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     var service = PokemonListService()
     var dispatchGroup = DispatchGroup()
     var list: [PokemonDetail] = []
-    var limit: Int = 100
+    var limit: Int = 50
     var pagination: Int = 0
     var isLoading = false
     
     var sortedList: [PokemonDetail]  {
         get {
             return list.sorted {$0.id < $1.id}
-           }
-           set {
-               self.list = newValue
-           }
+        }
+        set {
+            self.list = newValue
+        }
     }
     
     func retrieveCompleteList() {
+
         if isLoading {
             return
         }
@@ -65,17 +66,18 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
             }
             self.dispatchGroup.leave()
         }
-        
+
         dispatchGroup.notify(queue: .main) {
             [weak self] in
             self?.delegate?.updateList()
             self?.updatePagination()
             self?.isLoading = false
-            
+
 
         }
 
     }
+    
     
     private func updatePagination() {
         pagination += limit

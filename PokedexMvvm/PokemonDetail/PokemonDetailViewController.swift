@@ -38,14 +38,27 @@ final class PokemonDetailViewController: UIViewController {
 
     }
     
-    private func setupPageController() {
-        detailView.scrollView.delegate = self
+    override func viewDidLoad() {
+        viewModel.createSpecField()
+        viewModel.createStatsField()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         detailView.showBottomView()
     }
+    
+    private func setupPageController() {
+        detailView.pokemonDetailContainerView.scrollView.delegate = self
+        detailView.pokemonDetailContainerView.pageController.addTarget(self, action: #selector(pageControlValueChanged(_:)), for: .valueChanged)
+        
+    }
+    
+    @objc func pageControlValueChanged(_ sender: UIPageControl) {
+        let pageIndex = sender.currentPage
+        let xOffset = detailView.pokemonDetailContainerView.scrollView.frame.size.width * CGFloat(pageIndex)
+        detailView.pokemonDetailContainerView.scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
+      }
     
     @objc private func updateView() {
         detailView.showBottomView()
@@ -55,6 +68,14 @@ final class PokemonDetailViewController: UIViewController {
     
 }
 extension PokemonDetailViewController: PokemonDetailViewModelDelegate {
+    func setPokemonSpecs(for specs: [PokemonDetailSpecModel]) {
+        detailView.pokemonDetailContainerView.addDetails(detailList: specs)
+    }
+    
+    func setPokemonStats(for specs: [PokemonDetailSpecModel]) {
+        detailView.pokemonDetailContainerView.addDetails(detailList: specs)
+    }
+    
     func setPokemonView(for pokemon: PokemonDetail) {
         detailView.setView(pokemon: pokemon)
         debugPrint("setView")
@@ -64,6 +85,6 @@ extension PokemonDetailViewController: PokemonDetailViewModelDelegate {
 extension PokemonDetailViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let pageNumber = round(scrollView.contentOffset.x / scrollView.frame.size.width)
-        detailView.pageController.currentPage = Int(pageNumber)
+        detailView.pokemonDetailContainerView.pageController.currentPage = Int(pageNumber)
     }
 }

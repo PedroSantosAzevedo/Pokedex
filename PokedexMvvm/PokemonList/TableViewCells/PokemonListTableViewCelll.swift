@@ -120,7 +120,7 @@ class PokemonListTableViewCell:UITableViewCell{
     
     private func getImage(for pokemon: PokemonDetail) {
 
-        guard let imageString = pokemon.sprite?.url else {return}
+        let imageString = pokemon.sprite.url
         guard let imageUrl = URL(string: imageString) else {return}
         self.pokeImage.kf.indicatorType = .activity
         self.pokeImage.kf.setImage(with: imageUrl)
@@ -128,7 +128,7 @@ class PokemonListTableViewCell:UITableViewCell{
     }
     
     private func getTitle(for pokemon: PokemonDetail) {
-        self.titleLabel.text = pokemon.name
+        self.titleLabel.text = pokemon.name.capitalizedFirstLetter()
 
     }
     

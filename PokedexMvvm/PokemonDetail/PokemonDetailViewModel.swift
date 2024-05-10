@@ -9,12 +9,16 @@ import Foundation
 
 protocol PokemonDetailViewModelDelegate: AnyObject {
     func setPokemonView(for pokemon: PokemonDetail)
+    func setPokemonSpecs(for specs: [PokemonDetailSpecModel])
+    func setPokemonStats(for specs: [PokemonDetailSpecModel])
 }
 
 protocol PokemonDetailViewModelProtocol {
     var pokemonDetail:PokemonDetail { get set }
-    func setPokemonView()
     var delegate: PokemonDetailViewModelDelegate? { get set }
+    func setPokemonView()
+    func createSpecField()
+    func createStatsField()
 }
 
 final class PokemonDetailViewModel: PokemonDetailViewModelProtocol {
@@ -28,6 +32,16 @@ final class PokemonDetailViewModel: PokemonDetailViewModelProtocol {
     
     func setPokemonView() {
         delegate?.setPokemonView(for: pokemonDetail)
+    }
+    
+    func createSpecField() {
+        let specs = PokemonDetailSpecFactory.buildSpecList(for: pokemonDetail)
+        delegate?.setPokemonSpecs(for: specs)
+    }
+    
+    func createStatsField() {
+        let specs = PokemonDetailSpecFactory.buildStats(for: pokemonDetail)
+        delegate?.setPokemonStats(for: specs)
     }
     
 }

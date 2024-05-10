@@ -16,7 +16,7 @@ final class PokemonDetailPageView: UIView {
         stack.axis = .vertical
         stack.alignment = .center
         stack.backgroundColor = .clear
-        stack.distribution = .equalCentering
+        stack.distribution = .fillEqually
         stack.spacing = 8
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -30,23 +30,21 @@ final class PokemonDetailPageView: UIView {
         
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func addDetailView(view: UIView) {
         view.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(view)
         view.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
+
 }
 
 extension PokemonDetailPageView: ViewCodeProtocol {
     func setupHierarchy() {
         addSubview(stackView)
-
     }
     
     func setupConstraints() {
