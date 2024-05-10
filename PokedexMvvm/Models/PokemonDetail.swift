@@ -75,7 +75,7 @@ struct PokemonDetail: Codable {
     var types: [PokemonType]
     var abilities: [Ability]
     var stats: [Stat]
-    var isFav = false
+    var isFav:Bool?
     
     private enum CodingKeys: String, CodingKey {
         case id, name, weight, height, types, abilities, stats

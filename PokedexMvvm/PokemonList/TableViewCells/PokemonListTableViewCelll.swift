@@ -69,7 +69,6 @@ class PokemonListTableViewCell:UITableViewCell{
         let image = UIButton()
         image.backgroundColor = .clear
         image.tintColor = .white
-//        image.setImage(UIImage(named: "addCircle"), for: .normal)
         image.addTarget(self, action: #selector(capturePokemon), for: .touchUpInside)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
@@ -122,7 +121,7 @@ class PokemonListTableViewCell:UITableViewCell{
     }
     
     func getFav(for pokemon: PokemonDetail) {
-        let imageName =  pokemon.isFav ?  "favBall" : "notFavBall"
+        let imageName =  pokemon.isFav ?? false ?  "favBall" : "notFavBall"
         ballButton.setImage(UIImage(named: imageName), for: .normal)
     }
 

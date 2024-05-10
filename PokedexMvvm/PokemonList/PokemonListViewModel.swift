@@ -13,10 +13,12 @@ protocol PokemonListViewModelDelegate: AnyObject {
 
 protocol PokemonListViewModelProtocol: AnyObject {
     var delegate: PokemonListViewModelDelegate? { get set }
+    var shouldUpdateOnScroll: Bool { get set }
     var isLoading: Bool { get set }
     var sortedList: [PokemonDetail] { get set }
     func retrieveCompleteList()
     func setSaved(index: Int)
+    var pageName: String { get set }
 }
 
 final class PokemonListViewModel: PokemonListViewModelProtocol {
@@ -28,6 +30,8 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     var limit: Int = 50
     var pagination: Int = 0
     var isLoading = false
+    var shouldUpdateOnScroll = true
+    var pageName = "Pokedex"
     
     var sortedList: [PokemonDetail]  {
         get {
@@ -56,16 +60,29 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
         
         dispatchGroup.notify(queue: .main) {
             [weak self] in
-            self?.delegate?.updateList()
-            self?.updatePagination()
-            self?.isLoading = false
+            guard let self = self else { return }
+            self.checkForFavorites(pokemons: &self.list)
+            self.delegate?.updateList()
+            
+            self.updatePagination()
+            self.isLoading = false
         }
+    }
+    
+    func checkForFavorites(pokemons: inout [PokemonDetail]) {
+        guard let savedModel = FavoriteManager.retrieveModels() else { return }
         
-        
+        for i in 0..<pokemons.count {
+            if savedModel.contains(where: { $0.id == pokemons[i].id && $0.name == pokemons[i].name }) {
+                pokemons[i].isFav = true
+            } else {
+                pokemons[i].isFav = false
+            }
+        }
     }
     
     func retrieveCompleteList() {
-
+        self.checkForFavorites(pokemons: &self.list)
         if isLoading {
             return
         }
@@ -83,14 +100,17 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     }
     
     func setSaved(index: Int) {
-        guard let pokemon = sortedList[safe: index] else { return }
-        if pokemon.isFav {
+        guard var pokemon = sortedList[safe: index] else { return }
+        if pokemon.isFav ?? false {
+            pokemon.isFav = false
             FavoriteManager.removeModel(pokemon)
         } else {
+            pokemon.isFav = true
             FavoriteManager.saveModels([pokemon])
         }
+        self.checkForFavorites(pokemons: &self.list)
+        self.delegate?.updateList()
     }
-    
     
     private func updatePagination() {
         pagination += limit

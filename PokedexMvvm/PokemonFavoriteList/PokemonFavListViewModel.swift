@@ -8,11 +8,11 @@
 import Foundation
 
 final class PokemonFavListViewModel: PokemonListViewModelProtocol {
-    func setSaved(index: Int) {
-        
-    }
+    var pageName = "Favorites"
     
-    var delegate: PokemonListViewModelDelegate?
+    var shouldUpdateOnScroll: Bool = false
+    
+    weak var delegate: PokemonListViewModelDelegate?
     
     var isLoading: Bool = false
     
@@ -27,11 +27,29 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         }
     }
     
+    func setSaved(index: Int) {
+        guard var pokemon = sortedList[safe: index] else { return }
+        if pokemon.isFav ?? false {
+            FavoriteManager.removeModel(pokemon)
+        } else {
+            pokemon.isFav = true
+            FavoriteManager.saveModels([pokemon])
+        }
+        
+        retrieveCompleteList()
+    }
+    
     func retrieveCompleteList() {
-        guard let retrievedList = FavoriteManager.retrieveModels() else {
+        guard var retrievedList = FavoriteManager.retrieveModels() else {
             debugPrint("show error")
             return
         }
+        retrievedList = retrievedList.map({ pokemon in
+            var modifiedPoke = pokemon
+            modifiedPoke.isFav = true
+            return modifiedPoke
+            
+        })
         
         list = retrievedList
         delegate?.updateList()

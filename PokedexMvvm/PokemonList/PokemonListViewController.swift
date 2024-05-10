@@ -33,6 +33,7 @@ final class PokemonListViewController: UIViewController {
         self.view = PokemonListView()
 //        viewModel.retrieveCompleteList()
         setupTableViewDelegates()
+        listView.titleLabel.text = viewModel.pageName
         viewModel.delegate = self
         
     }
@@ -86,7 +87,9 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         if offsetY > contentHeight - scrollView.frame.height {
-            self.viewModel.retrieveCompleteList()
+            if viewModel.shouldUpdateOnScroll {
+                self.viewModel.retrieveCompleteList()
+            }
         }
     }
     
