@@ -47,55 +47,72 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     
     var sortedList: [PokemonDetail]  {
         get {
-            return list.sorted {$0.id < $1.id}
+            if isSearching {
+                return searchResult.sorted {$0.id < $1.id}
+            } else {
+                return list.sorted {$0.id < $1.id}
+            }
         }
         set {
-            self.list = newValue
+            if isSearching {
+                self.searchResult = newValue
+            } else {
+                self.list = newValue
+            }
         }
     }
     
     func searchList(for string: String) {
-        isSearching = true
-        self.searchResult = []
-        self.service.getPokemonDetail(url: string) { detailResult in
-            switch detailResult {
-            case .success(let detail):
-                self.searchResult.append(detail)
-                self.delegate?.hideErrorView()
-                self.delegate?.updateList()
-            case .failure(_):
-                debugPrint("error")
-                self.delegate?.updateList()
-                self.delegate?.showErrorView()
-            }
-        }
-    }
-    
-    private func retrieveListDetail(_ response: (APIResponse)) {
         
-        response.results.forEach { item in
-            self.dispatchGroup.enter()
-            self.service.getPokemonDetail(url: item.name) { detailResult in
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.isSearching = true
+            self.searchResult = []
+            self.service.getPokemonDetail(url: string) { detailResult in
                 switch detailResult {
                 case .success(let detail):
-                    self.list.append(detail)
+                    self.searchResult.append(detail)
+                    self.checkForFavorites(pokemons: &self.searchResult)
                     self.delegate?.hideErrorView()
-                    self.dispatchGroup.leave()
+                    self.delegate?.updateList()
                 case .failure(_):
                     debugPrint("error")
+                    self.delegate?.updateList()
                     self.delegate?.showErrorView()
-                    self.dispatchGroup.leave()
                 }
             }
         }
         
-        dispatchGroup.notify(queue: .main) {
-            [weak self] in
+    }
+    
+    private func retrieveListDetail(_ response: (APIResponse)) {
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.checkForFavorites(pokemons: &self.list)
-            self.delegate?.updateList()
-            self.updatePagination()
-            self.isLoading = false
+            response.results.forEach { item in
+                self.dispatchGroup.enter()
+                self.service.getPokemonDetail(url: item.name) { detailResult in
+                    switch detailResult {
+                    case .success(let detail):
+                        self.list.append(detail)
+                        self.delegate?.hideErrorView()
+                        self.dispatchGroup.leave()
+                    case .failure(_):
+                        debugPrint("error")
+                        self.delegate?.showErrorView()
+                        self.dispatchGroup.leave()
+                    }
+                }
+                
+            }
+            
+            self.dispatchGroup.notify(queue: .main) {
+                [weak self] in
+                guard let self = self else { return }
+                self.checkForFavorites(pokemons: &self.list)
+                self.delegate?.updateList()
+                self.updatePagination()
+                self.isLoading = false
+            }
         }
     }
     
@@ -130,30 +147,18 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     
     func setSaved(index: Int) {
         
-        var selectedPokemon: PokemonDetail?
+        guard var pokemon = sortedList[safe: index] else { return }
         
-        if isSearching {
-            guard let pokemon = searchResult[safe: index] else { return }
-            selectedPokemon = pokemon
+        if pokemon.isFav ?? false {
+            pokemon.isFav = false
+            favoriteManager.removeModel(pokemon)
         } else {
-            guard let pokemon = sortedList[safe: index] else { return }
-            selectedPokemon = pokemon
-        }
-        guard var selectedPokemon = selectedPokemon else { return }
-
-        if selectedPokemon.isFav ?? false {
-            selectedPokemon.isFav = false
-            favoriteManager.removeModel(selectedPokemon)
-        } else {
-            selectedPokemon.isFav = true
-            favoriteManager.saveModels([selectedPokemon])
+            pokemon.isFav = true
+            favoriteManager.saveModels([pokemon])
         }
         
-        if isSearching {
-            self.checkForFavorites(pokemons: &self.searchResult)
-        } else {
-            self.checkForFavorites(pokemons: &self.list)
-        }
+        self.checkForFavorites(pokemons: &self.list)
+        self.checkForFavorites(pokemons: &self.searchResult)
         
         self.delegate?.updateList()
     }

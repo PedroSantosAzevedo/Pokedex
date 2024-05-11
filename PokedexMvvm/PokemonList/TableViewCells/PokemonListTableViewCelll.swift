@@ -48,7 +48,7 @@ class PokemonListTableViewCell:UITableViewCell{
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.alpha = 0
+        label.alpha = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isAccessibilityElement = false
@@ -78,7 +78,7 @@ class PokemonListTableViewCell:UITableViewCell{
     
     lazy var numberLabel: UILabel = {
         let label = UILabel()
-        label.alpha = 0
+        label.alpha = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.minimumScaleFactor = 0.6

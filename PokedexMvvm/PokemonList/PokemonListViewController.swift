@@ -59,15 +59,15 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.isSearching ? viewModel.searchResult.count : viewModel.sortedList.count
+        viewModel.sortedList.count
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PokemonListTableViewCell.reusableIdentifier, for: indexPath) as? PokemonListTableViewCell else { return UITableViewCell() }
-        let source = viewModel.isSearching ? viewModel.searchResult[indexPath.row] : viewModel.sortedList[indexPath.row]
-        
+
+        let source = viewModel.sortedList[indexPath.row]
         cell.setUp(with: source, indexPath: indexPath)
         return cell
     }
@@ -75,17 +75,14 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         guard let cell = cell as? PokemonListTableViewCell else { return }
         cell.delegate = self
-        
-        let source = viewModel.isSearching ? viewModel.searchResult[indexPath.row] : viewModel.sortedList[indexPath.row]
+
+        let source = viewModel.sortedList[indexPath.row]
         
         cell.shrink(hasShown: source.hasShown)
         cell.appear()
         
-        if viewModel.isSearching{
-            viewModel.searchResult[indexPath.row].hasShown = true
-        } else {
-            viewModel.sortedList[indexPath.row].hasShown = true
-        }
+        viewModel.sortedList[indexPath.row].hasShown = true
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -94,8 +91,7 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let source = viewModel.isSearching ? viewModel.searchResult[indexPath.row] : viewModel.sortedList[indexPath.row]
-        
+        let source = viewModel.sortedList[indexPath.row]
         let dict = ["pokemonDetail" : source]
         router.goTo(path: PokemonListRouter.detailRoute, in: self.navigationController, parameters: dict)
     }
@@ -143,6 +139,8 @@ extension PokemonListViewController: UISearchBarDelegate {
         if !viewModel.sortedList.isEmpty {
             hideErrorView()
         }
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
         updateList()
         searchBar.endEditing(true)
        }

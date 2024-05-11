@@ -20,20 +20,28 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
     
     var sortedList: [PokemonDetail]  {
         get {
-            return list.sorted {$0.id < $1.id}
+            if isSearching {
+                return searchResult.sorted {$0.id < $1.id}
+            } else {
+                return list.sorted {$0.id < $1.id}
+            }
         }
         set {
-            self.list = newValue
+            if isSearching {
+                self.searchResult = newValue
+            } else {
+                self.list = newValue
+            }
         }
     }
     
     func searchList(for string: String) {
         isSearching = true
-        if let index = sortedList.firstIndex(where: { String($0.id) == string || $0.name == string }) {
-            searchResult = [sortedList[index]]
+        if let index = list.firstIndex(where: { String($0.id) == string || $0.name == string }) {
+            searchResult = [list[index]]
         }
         
-        if searchResult.isEmpty {
+        if sortedList.isEmpty {
             self.delegate?.showErrorView()
         } else {
             self.delegate?.hideErrorView()
@@ -43,26 +51,16 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
     }
     
     func setSaved(index: Int) {
-        var selectedPokemon: PokemonDetail?
+        guard var pokemon = sortedList[safe: index] else { return }
         
-        if isSearching {
-            guard let pokemon = searchResult[safe: index] else { return }
-            selectedPokemon = pokemon
-        } else {
-            guard let pokemon = sortedList[safe: index] else { return }
-            selectedPokemon = pokemon
-        }
-        
-        guard var selectedPokemon = selectedPokemon else { return }
-        
-        if selectedPokemon.isFav ?? false {
-            favoriteManager.removeModel(selectedPokemon)
+        if pokemon.isFav ?? false {
+            favoriteManager.removeModel(pokemon)
             if isSearching {
                 searchResult.remove(at: index)
             }
         } else {
-            selectedPokemon.isFav = true
-            favoriteManager.saveModels([selectedPokemon])
+            pokemon.isFav = true
+            favoriteManager.saveModels([pokemon])
         }
         
         retrieveCompleteList()
