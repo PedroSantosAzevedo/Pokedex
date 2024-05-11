@@ -30,6 +30,13 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         if let index = sortedList.firstIndex(where: { String($0.id) == string || $0.name == string }) {
             searchResult = [sortedList[index]]
         }
+        
+        if searchResult.isEmpty {
+            self.delegate?.showErrorView()
+        } else {
+            self.delegate?.hideErrorView()
+        }
+        
         self.delegate?.updateList()
     }
     
@@ -47,7 +54,7 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
     
     func retrieveCompleteList() {
         guard var retrievedList = FavoriteManager.retrieveModels() else {
-            debugPrint("show error")
+            self.delegate?.showErrorView()
             return
         }
         retrievedList = retrievedList.map({ pokemon in
@@ -59,6 +66,7 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         })
         
         list = retrievedList
+        self.delegate?.hideErrorView()
         delegate?.updateList()
     }
     

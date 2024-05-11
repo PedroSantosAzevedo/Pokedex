@@ -31,6 +31,13 @@ final class PokemonListView: UIView {
         return label
     }()
     
+    lazy var errorView: ErrorView = {
+        let errorView = ErrorView()
+        errorView.isHidden = true
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        return errorView
+    }()
+    
     lazy var searchBar:UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -60,13 +67,21 @@ final class PokemonListView: UIView {
         super.init(frame:frame)
         self.backgroundColor = Theme.Colors.background.color
         setupView()
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func showErrorView() {
+        errorView.isHidden = false
+        tableView.isHidden = true
+    }
+    
+    func hideErrorView() {
+        errorView.isHidden = true
+        tableView.isHidden = false
+    }
 }
 
 extension PokemonListView: ViewCodeProtocol {
@@ -76,6 +91,7 @@ extension PokemonListView: ViewCodeProtocol {
         addSubview(searchBar)
         addSubview(titleLabel)
         addSubview(tableView)
+        addSubview(errorView)
     }
     
     func setupConstraints() {
@@ -97,6 +113,12 @@ extension PokemonListView: ViewCodeProtocol {
         tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        errorView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
+        errorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        errorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        errorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
     }
     
 }

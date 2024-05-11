@@ -9,6 +9,8 @@ import Foundation
 
 protocol PokemonListViewModelDelegate: AnyObject {
     func updateList()
+    func showErrorView()
+    func hideErrorView()
 }
 
 protocol PokemonListViewModelProtocol: AnyObject {
@@ -58,10 +60,12 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
             switch detailResult {
             case .success(let detail):
                 self.searchResult.append(detail)
+                self.delegate?.hideErrorView()
                 self.delegate?.updateList()
             case .failure(_):
                 debugPrint("error")
                 self.delegate?.updateList()
+                self.delegate?.showErrorView()
             }
         }
     }
@@ -74,9 +78,11 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
                 switch detailResult {
                 case .success(let detail):
                     self.list.append(detail)
+                    self.delegate?.hideErrorView()
                     self.dispatchGroup.leave()
                 case .failure(_):
                     debugPrint("error")
+                    self.delegate?.showErrorView()
                     self.dispatchGroup.leave()
                 }
             }
@@ -87,7 +93,6 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
             guard let self = self else { return }
             self.checkForFavorites(pokemons: &self.list)
             self.delegate?.updateList()
-            
             self.updatePagination()
             self.isLoading = false
         }
@@ -117,7 +122,7 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
             case .success(let response):
                 self.retrieveListDetail(response)
             case .failure(_):
-                debugPrint("error")
+                self.delegate?.showErrorView()
             }
         }
     }

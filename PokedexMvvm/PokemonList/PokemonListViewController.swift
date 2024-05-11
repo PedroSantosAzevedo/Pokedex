@@ -108,6 +108,14 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
 
 
 extension PokemonListViewController: PokemonListViewModelDelegate {
+    func showErrorView() {
+        listView.showErrorView()
+    }
+    
+    func hideErrorView() {
+        listView.hideErrorView()
+    }
+    
     func updateList() {
         listView.tableView.reloadData()
     }
@@ -126,6 +134,10 @@ extension PokemonListViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         viewModel.isSearching = false
+        
+        if !viewModel.sortedList.isEmpty {
+            hideErrorView()
+        }
         updateList()
         searchBar.endEditing(true)
        }
