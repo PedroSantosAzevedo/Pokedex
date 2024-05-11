@@ -31,6 +31,9 @@ Accessibility is a key aspect of this project's development. Efforts have been m
 ## UnitTesting
 For tests, the project is covered in all ViewModels where all the heavy logic is created. Allowing for safe changes that won't affect other functionalities.
 
+## UITesting
+For ui tests, the project is covered used the automatic generated UITests, testing the main list view and the detail view.
+
 ## Libraries Used
 This project utilizes the following libraries:
 
