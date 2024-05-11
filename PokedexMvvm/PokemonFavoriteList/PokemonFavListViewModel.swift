@@ -54,9 +54,12 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         }
         
         guard var selectedPokemon = selectedPokemon else { return }
+        
         if selectedPokemon.isFav ?? false {
             favoriteManager.removeModel(selectedPokemon)
-            searchResult.remove(at: index)
+            if isSearching {
+                searchResult.remove(at: index)
+            }
         } else {
             selectedPokemon.isFav = true
             favoriteManager.saveModels([selectedPokemon])

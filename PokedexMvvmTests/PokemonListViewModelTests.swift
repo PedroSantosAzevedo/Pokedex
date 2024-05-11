@@ -107,8 +107,6 @@ class PokemonListViewModelTests: XCTestCase {
     }
 }
 
-
-
 class MockPokemonListViewModelDelegate: PokemonListViewModelDelegate {
     var updateListCalled = false
     var showErrorViewCalled = false
