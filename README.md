@@ -1,8 +1,13 @@
 # PokedexMVVM
 
 ## Project Description
+This project retrieves and show a list of Pokemons from the https://pokeapi.co.
 
+The first view shows a list containing image, number, type of the pokemon(represented as the color of the cell), and a buttuon for saving that Pokemon as favorite. The view also has a serach feature that allows the user to search for name and id of the desired Pokemon
 
+The second tab shows the favorited pokemons. Allowing the user to list and search for their favorite. Those pokemons are saved locally using UserDefaults.
+
+In both views, when a pokemon is selected, the app directs do a DetailView, that shows a bigger and better picture of the selected pokemon, as well as their stats and characteristics.
 
 ## Architecture Description
 This PokedexMVVM project is built following the MVVM (Model-View-ViewModel) architecture pattern.
