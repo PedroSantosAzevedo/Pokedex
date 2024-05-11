@@ -30,6 +30,7 @@ class PokemonListTableViewCell:UITableViewCell{
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
+        view.isAccessibilityElement = true
         view.layer.cornerRadius = 16
         return view
     }()
@@ -50,6 +51,7 @@ class PokemonListTableViewCell:UITableViewCell{
         label.alpha = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
+        label.isAccessibilityElement = false
         label.textColor = .black
         label.adjustsFontSizeToFitWidth = true
         return label
@@ -81,6 +83,7 @@ class PokemonListTableViewCell:UITableViewCell{
         label.backgroundColor = .clear
         label.minimumScaleFactor = 0.6
         label.numberOfLines = 5
+        label.isAccessibilityElement = false
         label.lineBreakMode = .byTruncatingHead
         label.textColor = .white
         label.adjustsFontSizeToFitWidth = true
@@ -111,6 +114,11 @@ class PokemonListTableViewCell:UITableViewCell{
         ballButton.setImage(UIImage(named: "pokeballColor"), for: .normal)
     }
     
+    private func setAccessibility() {
+        self.containerView.accessibilityValue = "\(titleLabel.text ?? ""), \(numberLabel.text ?? "")"
+        self.accessibilityElements = [containerView, ballButton]
+    }
+    
     func setUp(with pokemon: PokemonDetail, indexPath: IndexPath){
         getImage(for: pokemon)
         getTitle(for: pokemon)
@@ -118,11 +126,17 @@ class PokemonListTableViewCell:UITableViewCell{
         getColor(for: pokemon)
         getFav(for: pokemon)
         self.indexPath = indexPath
+        setAccessibility()
     }
     
     func getFav(for pokemon: PokemonDetail) {
         let imageName =  pokemon.isFav ?? false ?  "favBall" : "notFavBall"
+        let accessibility =  "Favorite button"
+        
         ballButton.setImage(UIImage(named: imageName), for: .normal)
+        ballButton.accessibilityLabel = accessibility
+        ballButton.accessibilityHint = "Select to add or remove from favorites"
+        ballButton.accessibilityValue = pokemon.isFav ?? false ?  "selected" : "not selected"
     }
 
     func getColor(for pokemon: PokemonDetail) {

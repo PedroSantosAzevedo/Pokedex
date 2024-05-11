@@ -67,6 +67,7 @@ final class PokemonListView: UIView {
         super.init(frame:frame)
         self.backgroundColor = Theme.Colors.background.color
         setupView()
+        
     }
     
     required init?(coder: NSCoder) {

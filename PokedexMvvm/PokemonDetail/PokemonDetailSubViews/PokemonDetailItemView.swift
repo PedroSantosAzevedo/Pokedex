@@ -17,6 +17,7 @@ final class PokemonDetailItemView: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
+        view.isAccessibilityElement = true
         view.layer.cornerRadius = 16
         return view
     }()
@@ -59,6 +60,8 @@ final class PokemonDetailItemView: UIView {
         self.titleLabel.text = field
         self.valueLabel.text = value
         self.pokeImage.image = UIImage(named: image)
+        self.containerView.accessibilityLabel = "\(field), \(value)"
+        self.accessibilityElements = [containerView]
     }
     
     
