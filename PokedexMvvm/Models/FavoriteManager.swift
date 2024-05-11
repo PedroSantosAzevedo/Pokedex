@@ -7,12 +7,18 @@
 
 import Foundation
 
-struct FavoriteManager {
+protocol FavoriteManagerProtocol {
+    func saveModels(_ newModels: [PokemonDetail])
+    func retrieveModels() -> [PokemonDetail]?
+    func removeModel(_ model: PokemonDetail)
+}
+
+struct FavoriteManager: FavoriteManagerProtocol {
     
-    private static let userDefaults = UserDefaults.standard
-    private static let key = "favorites"
+    private let userDefaults = UserDefaults.standard
+    private let key = "favorites"
     
-    static func saveModels(_ newModels: [PokemonDetail]) {
+    func saveModels(_ newModels: [PokemonDetail]) {
         var existingModels = retrieveModels() ?? []
 
         for newModel in newModels {
@@ -31,7 +37,7 @@ struct FavoriteManager {
     }
     
     
-    static func retrieveModels() -> [PokemonDetail]? {
+    func retrieveModels() -> [PokemonDetail]? {
         guard let encodedData = userDefaults.data(forKey: key) else {
             return nil
         }
@@ -46,7 +52,7 @@ struct FavoriteManager {
         }
     }
     
-    static func removeModel(_ model: PokemonDetail) {
+    func removeModel(_ model: PokemonDetail) {
            guard var savedModels = retrieveModels() else {
                return
            }

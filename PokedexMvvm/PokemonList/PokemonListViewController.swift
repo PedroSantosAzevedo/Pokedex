@@ -80,7 +80,12 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
         
         cell.shrink(hasShown: source.hasShown)
         cell.appear()
-        viewModel.sortedList[indexPath.row].hasShown = true
+        
+        if viewModel.isSearching{
+            viewModel.searchResult[indexPath.row].hasShown = true
+        } else {
+            viewModel.sortedList[indexPath.row].hasShown = true
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

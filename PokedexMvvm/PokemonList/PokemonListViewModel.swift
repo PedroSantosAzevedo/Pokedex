@@ -22,7 +22,7 @@ protocol PokemonListViewModelProtocol: AnyObject {
     var pageName: String { get set }
     var sortedList: [PokemonDetail] { get set }
     var searchResult: [PokemonDetail] { get set }
-    
+    var favoriteManager: FavoriteManagerProtocol { get set }
     
     func retrieveCompleteList()
     func setSaved(index: Int)
@@ -33,7 +33,8 @@ protocol PokemonListViewModelProtocol: AnyObject {
 final class PokemonListViewModel: PokemonListViewModelProtocol {
     
     weak var delegate: PokemonListViewModelDelegate?
-    var service = PokemonListService()
+    var service: PokemonListServiceProtocol = PokemonListService()
+    var favoriteManager: FavoriteManagerProtocol = FavoriteManager()
     var dispatchGroup = DispatchGroup()
     var list: [PokemonDetail] = []
     var searchResult: [PokemonDetail] = []
@@ -99,7 +100,7 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     }
     
     func checkForFavorites(pokemons: inout [PokemonDetail]) {
-        guard let savedModel = FavoriteManager.retrieveModels() else { return }
+        guard let savedModel = favoriteManager.retrieveModels() else { return }
         
         for i in 0..<pokemons.count {
             if savedModel.contains(where: { $0.id == pokemons[i].id && $0.name == pokemons[i].name }) {
@@ -128,15 +129,32 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     }
     
     func setSaved(index: Int) {
-        guard var pokemon = sortedList[safe: index] else { return }
-        if pokemon.isFav ?? false {
-            pokemon.isFav = false
-            FavoriteManager.removeModel(pokemon)
+        
+        var selectedPokemon: PokemonDetail?
+        
+        if isSearching {
+            guard let pokemon = searchResult[safe: index] else { return }
+            selectedPokemon = pokemon
         } else {
-            pokemon.isFav = true
-            FavoriteManager.saveModels([pokemon])
+            guard let pokemon = sortedList[safe: index] else { return }
+            selectedPokemon = pokemon
         }
-        self.checkForFavorites(pokemons: &self.list)
+        guard var selectedPokemon = selectedPokemon else { return }
+
+        if selectedPokemon.isFav ?? false {
+            selectedPokemon.isFav = false
+            favoriteManager.removeModel(selectedPokemon)
+        } else {
+            selectedPokemon.isFav = true
+            favoriteManager.saveModels([selectedPokemon])
+        }
+        
+        if isSearching {
+            self.checkForFavorites(pokemons: &self.searchResult)
+        } else {
+            self.checkForFavorites(pokemons: &self.list)
+        }
+        
         self.delegate?.updateList()
     }
     

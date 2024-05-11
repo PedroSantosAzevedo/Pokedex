@@ -8,6 +8,8 @@
 import Foundation
 
 final class PokemonFavListViewModel: PokemonListViewModelProtocol {
+    var favoriteManager: FavoriteManagerProtocol = FavoriteManager()
+    
     var pageName = "Favorites"
     var shouldUpdateOnScroll: Bool = false
     weak var delegate: PokemonListViewModelDelegate?
@@ -41,19 +43,30 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
     }
     
     func setSaved(index: Int) {
-        guard var pokemon = sortedList[safe: index] else { return }
-        if pokemon.isFav ?? false {
-            FavoriteManager.removeModel(pokemon)
+        var selectedPokemon: PokemonDetail?
+        
+        if isSearching {
+            guard let pokemon = searchResult[safe: index] else { return }
+            selectedPokemon = pokemon
         } else {
-            pokemon.isFav = true
-            FavoriteManager.saveModels([pokemon])
+            guard let pokemon = sortedList[safe: index] else { return }
+            selectedPokemon = pokemon
+        }
+        
+        guard var selectedPokemon = selectedPokemon else { return }
+        if selectedPokemon.isFav ?? false {
+            favoriteManager.removeModel(selectedPokemon)
+            searchResult.remove(at: index)
+        } else {
+            selectedPokemon.isFav = true
+            favoriteManager.saveModels([selectedPokemon])
         }
         
         retrieveCompleteList()
     }
     
     func retrieveCompleteList() {
-        guard var retrievedList = FavoriteManager.retrieveModels() else {
+        guard var retrievedList = favoriteManager.retrieveModels() else {
             self.delegate?.showErrorView()
             return
         }

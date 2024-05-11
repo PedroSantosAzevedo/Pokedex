@@ -8,7 +8,12 @@
 import Foundation
 import Alamofire
 
-final class PokemonListService {
+protocol PokemonListServiceProtocol {
+    func getList(pagination:Int, limit: Int,completion: @escaping(Result<APIResponse,AFError>) -> Void)
+    func getPokemonDetail(url:String,completion: @escaping(Result<PokemonDetail,AFError>) -> Void)
+}
+
+final class PokemonListService: PokemonListServiceProtocol {
     
     func getList(pagination:Int, limit: Int,completion: @escaping(Result<APIResponse,AFError>) -> Void) {
 
