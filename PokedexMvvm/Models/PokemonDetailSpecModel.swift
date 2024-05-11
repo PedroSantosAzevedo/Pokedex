@@ -29,9 +29,9 @@ enum PokemonDetailSpecField: CaseIterable {
             self = .attack
         case "defense":
             self = .defense
-        case "specialAttack":
+        case "specialAttack", "special attack":
             self = .specialAttack
-        case "specialDefense":
+        case "specialDefense", "special defense":
             self = .specialDefense
         case "speed":
             self = .speed

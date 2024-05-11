@@ -31,6 +31,19 @@ final class PokemonListView: UIView {
         return label
     }()
     
+    lazy var searchBar:UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.barTintColor = Theme.Colors.background.color
+        searchBar.tintColor = Theme.Colors.onBackGround.color
+        searchBar.barStyle = .default
+        searchBar.isTranslucent = true
+        searchBar.enablesReturnKeyAutomatically = false
+        searchBar.placeholder = ""
+        searchBar.showsCancelButton = true
+        return searchBar
+    }()
+    
     lazy var tableView:UITableView = {
         let tableView = UITableView()
         addSubview(tableView)
@@ -60,6 +73,7 @@ extension PokemonListView: ViewCodeProtocol {
     
     func setupHierarchy() {
         addSubview(containerView)
+        addSubview(searchBar)
         addSubview(titleLabel)
         addSubview(tableView)
     }
@@ -70,15 +84,19 @@ extension PokemonListView: ViewCodeProtocol {
         containerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         containerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
+        searchBar.topAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+        searchBar.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        searchBar.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
         titleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant:  -8).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
-        tableView.topAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
-
+    
 }

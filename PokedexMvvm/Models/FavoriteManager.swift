@@ -52,10 +52,8 @@ struct FavoriteManager {
            }
            
            if let index = savedModels.firstIndex(where: { $0.id == model.id && $0.name == model.name }) {
-               // Remove the model at the found index
                savedModels.remove(at: index)
                
-               // Save the updated array back to UserDefaults
                do {
                    let encoder = JSONEncoder()
                    let encodedData = try encoder.encode(savedModels)

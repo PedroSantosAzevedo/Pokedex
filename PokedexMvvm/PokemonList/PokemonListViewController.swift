@@ -31,8 +31,8 @@ final class PokemonListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view = PokemonListView()
-//        viewModel.retrieveCompleteList()
         setupTableViewDelegates()
+        setupSearchBarDelegate()
         listView.titleLabel.text = viewModel.pageName
         viewModel.delegate = self
         
@@ -46,6 +46,9 @@ final class PokemonListViewController: UIViewController {
         listView.tableView.delegate = self
     }
     
+    private func setupSearchBarDelegate() {
+        listView.searchBar.delegate = self
+    }
 }
 
 extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
@@ -56,20 +59,26 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.sortedList.count
+        viewModel.isSearching ? viewModel.searchResult.count : viewModel.sortedList.count
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PokemonListTableViewCell.reusableIdentifier, for: indexPath) as? PokemonListTableViewCell else { return UITableViewCell() }
-        cell.setUp(with: viewModel.sortedList[indexPath.row], indexPath: indexPath)
+        let source = viewModel.isSearching ? viewModel.searchResult[indexPath.row] : viewModel.sortedList[indexPath.row]
+        
+        cell.setUp(with: source, indexPath: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         guard let cell = cell as? PokemonListTableViewCell else { return }
         cell.delegate = self
-        cell.shrink(hasShown: viewModel.sortedList[indexPath.row].hasShown)
+        
+        let source = viewModel.isSearching ? viewModel.searchResult[indexPath.row] : viewModel.sortedList[indexPath.row]
+        
+        cell.shrink(hasShown: source.hasShown)
         cell.appear()
         viewModel.sortedList[indexPath.row].hasShown = true
     }
@@ -79,7 +88,10 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dict = ["pokemonDetail" : viewModel.sortedList[indexPath.row]]
+        
+        let source = viewModel.isSearching ? viewModel.searchResult[indexPath.row] : viewModel.sortedList[indexPath.row]
+        
+        let dict = ["pokemonDetail" : source]
         router.goTo(path: PokemonListRouter.detailRoute, in: self.navigationController, parameters: dict)
     }
     
@@ -92,8 +104,6 @@ extension PokemonListViewController:UITableViewDelegate,UITableViewDataSource{
             }
         }
     }
-    
-    
 }
 
 
@@ -103,12 +113,30 @@ extension PokemonListViewController: PokemonListViewModelDelegate {
     }
 }
 
-
-extension PokemonListViewController:PokemonListTableViewCellDelegate {
+extension PokemonListViewController: PokemonListTableViewCellDelegate {
     func didSelectFav(indexPath: IndexPath?) {
         guard let indexPath = indexPath else {
             return
         }
         viewModel.setSaved(index: indexPath.row)
     }
+}
+
+extension PokemonListViewController: UISearchBarDelegate {
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        viewModel.isSearching = false
+        updateList()
+        searchBar.endEditing(true)
+       }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let text = searchBar.text, text != "" {
+            let undercased = text.lowercased()
+            viewModel.searchList(for: undercased)
+        }
+        searchBar.endEditing(true)
+    }
+    
+    
 }

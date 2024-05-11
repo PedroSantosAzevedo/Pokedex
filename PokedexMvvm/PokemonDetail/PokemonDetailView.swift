@@ -159,7 +159,7 @@ extension PokemonDetailView: ViewCodeProtocol {
         bottomViewTopContraint?.isActive = true
         bottomContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
         bottomContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-        bottomContainerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 8).isActive = true
+        bottomContainerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         
         pokeImage.heightAnchor.constraint(equalToConstant: height/4).isActive = true
         pokeImage.widthAnchor.constraint(equalToConstant: height/4).isActive = true

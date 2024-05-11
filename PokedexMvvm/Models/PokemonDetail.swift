@@ -51,9 +51,9 @@ enum PokemonStats: String, Codable {
             self = .attack
         case "defense":
             self = .defense
-        case "special-attack":
+        case "special-attack", "specialAttack":
             self = .specialAttack
-        case "special-defense":
+        case "special-defense", "specialDefense":
             self = .specialDefense
         case "speed":
             self = .speed

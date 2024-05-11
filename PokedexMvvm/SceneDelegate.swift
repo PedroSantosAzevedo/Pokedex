@@ -23,11 +23,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let listNav = UINavigationController()
         PokemonListCoordinator(navigationController: listNav).start()
+        listNav.tabBarItem.image = UIImage(named: "list")
         listNav.tabBarItem.title = "List"
         
         let favController = UINavigationController()
         favController.pushViewController(PokemonListCoordinator.buildFavList(), animated: true)
         favController.tabBarItem.title = "Fav"
+        favController.tabBarItem.image = UIImage(named: "hp")
         tabBar.viewControllers = [listNav,favController]
 
         UINavigationBar.appearance().barTintColor = .clear

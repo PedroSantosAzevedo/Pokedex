@@ -13,12 +13,19 @@ protocol PokemonListViewModelDelegate: AnyObject {
 
 protocol PokemonListViewModelProtocol: AnyObject {
     var delegate: PokemonListViewModelDelegate? { get set }
+    
     var shouldUpdateOnScroll: Bool { get set }
     var isLoading: Bool { get set }
+    var isSearching: Bool { get set }
+    var pageName: String { get set }
     var sortedList: [PokemonDetail] { get set }
+    var searchResult: [PokemonDetail] { get set }
+    
+    
     func retrieveCompleteList()
     func setSaved(index: Int)
-    var pageName: String { get set }
+    func searchList(for string: String)
+    
 }
 
 final class PokemonListViewModel: PokemonListViewModelProtocol {
@@ -27,10 +34,12 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
     var service = PokemonListService()
     var dispatchGroup = DispatchGroup()
     var list: [PokemonDetail] = []
+    var searchResult: [PokemonDetail] = []
     var limit: Int = 50
     var pagination: Int = 0
     var isLoading = false
     var shouldUpdateOnScroll = true
+    var isSearching = false
     var pageName = "Pokedex"
     
     var sortedList: [PokemonDetail]  {
@@ -39,6 +48,21 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
         }
         set {
             self.list = newValue
+        }
+    }
+    
+    func searchList(for string: String) {
+        isSearching = true
+        self.searchResult = []
+        self.service.getPokemonDetail(url: string) { detailResult in
+            switch detailResult {
+            case .success(let detail):
+                self.searchResult.append(detail)
+                self.delegate?.updateList()
+            case .failure(_):
+                debugPrint("error")
+                self.delegate?.updateList()
+            }
         }
     }
     
@@ -94,7 +118,6 @@ final class PokemonListViewModel: PokemonListViewModelProtocol {
                 self.retrieveListDetail(response)
             case .failure(_):
                 debugPrint("error")
-             
             }
         }
     }

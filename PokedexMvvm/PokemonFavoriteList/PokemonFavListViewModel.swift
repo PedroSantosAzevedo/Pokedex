@@ -9,15 +9,13 @@ import Foundation
 
 final class PokemonFavListViewModel: PokemonListViewModelProtocol {
     var pageName = "Favorites"
-    
     var shouldUpdateOnScroll: Bool = false
-    
     weak var delegate: PokemonListViewModelDelegate?
-    
     var isLoading: Bool = false
-    
     var list: [PokemonDetail] = []
-
+    var searchResult: [PokemonDetail] = []
+    var isSearching: Bool = false
+    
     var sortedList: [PokemonDetail]  {
         get {
             return list.sorted {$0.id < $1.id}
@@ -25,6 +23,14 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         set {
             self.list = newValue
         }
+    }
+    
+    func searchList(for string: String) {
+        isSearching = true
+        if let index = sortedList.firstIndex(where: { String($0.id) == string || $0.name == string }) {
+            searchResult = [sortedList[index]]
+        }
+        self.delegate?.updateList()
     }
     
     func setSaved(index: Int) {
@@ -47,6 +53,7 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         retrievedList = retrievedList.map({ pokemon in
             var modifiedPoke = pokemon
             modifiedPoke.isFav = true
+            modifiedPoke.hasShown = true
             return modifiedPoke
             
         })
@@ -54,5 +61,5 @@ final class PokemonFavListViewModel: PokemonListViewModelProtocol {
         list = retrievedList
         delegate?.updateList()
     }
-
+    
 }
