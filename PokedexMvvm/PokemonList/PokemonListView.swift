@@ -14,6 +14,7 @@ final class PokemonListView: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Theme.Colors.background.color
+        view.accessibilityIdentifier = "containerView"
         view.backgroundColor = .clear
         view.alpha = 0.5
         return view
@@ -22,6 +23,7 @@ final class PokemonListView: UIView {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.alpha = 1
+        label.accessibilityIdentifier = "titleLabel"
         label.text = "Pokedex"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -34,6 +36,7 @@ final class PokemonListView: UIView {
     lazy var errorView: ErrorView = {
         let errorView = ErrorView()
         errorView.isHidden = true
+        errorView.accessibilityIdentifier = "errorView"
         errorView.translatesAutoresizingMaskIntoConstraints = false
         return errorView
     }()
@@ -41,6 +44,7 @@ final class PokemonListView: UIView {
     lazy var searchBar:UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.accessibilityIdentifier = "searchBar"
         searchBar.barTintColor = Theme.Colors.background.color
         searchBar.tintColor = Theme.Colors.onBackGround.color
         searchBar.barStyle = .default
