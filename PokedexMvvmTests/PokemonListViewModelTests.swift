@@ -14,7 +14,7 @@ class PokemonListViewModelTests: XCTestCase {
     var viewModel: PokemonListViewModel!
     var mockService: PokemonServiceSpy!
     var mockDelegate: MockPokemonListViewModelDelegate!
-
+    
     override func setUp() {
         super.setUp()
         mockService = PokemonServiceSpy()
@@ -23,7 +23,7 @@ class PokemonListViewModelTests: XCTestCase {
         viewModel.service = mockService
         viewModel.delegate = mockDelegate
     }
-
+    
     override func tearDown() {
         mockService.shouldReturnError = false
         viewModel = nil
@@ -58,6 +58,12 @@ class PokemonListViewModelTests: XCTestCase {
         viewModel.service = mockService
         viewModel.searchList(for: "some_url")
         
+        let expectation = self.expectation(description: "Test")
+        DispatchQueue.main.async {
+            expectation.fulfill()
+        }
+        self.waitForExpectations(timeout: 5, handler: nil)
+        
         XCTAssertTrue(mockDelegate.updateListCalled)
         XCTAssertFalse(mockDelegate.showErrorViewCalled)
         XCTAssertTrue(mockDelegate.hideErrorViewCalled)
@@ -68,6 +74,12 @@ class PokemonListViewModelTests: XCTestCase {
         viewModel.service = mockService
         viewModel.searchList(for: "some_url")
         
+        let expectation = self.expectation(description: "Test")
+        DispatchQueue.main.async {
+            expectation.fulfill()
+        }
+        self.waitForExpectations(timeout: 5, handler: nil)
+        
         XCTAssertTrue(mockDelegate.showErrorViewCalled)
         XCTAssertTrue(mockDelegate.updateListCalled)
         XCTAssertFalse(mockDelegate.hideErrorViewCalled)
@@ -77,8 +89,14 @@ class PokemonListViewModelTests: XCTestCase {
         mockService.shouldReturnError = false
         viewModel.service = mockService
         viewModel.retrieveCompleteList()
-        viewModel.favoriteManager = FavoriteManagerSpy()
         
+        let expectation = self.expectation(description: "Test")
+        DispatchQueue.main.async {
+            expectation.fulfill()
+        }
+        self.waitForExpectations(timeout: 5, handler: nil)
+        
+        viewModel.favoriteManager = FavoriteManagerSpy()
         viewModel.setSaved(index: 0)
         XCTAssertTrue(viewModel.sortedList[0].isFav ?? false)
         XCTAssertTrue(mockDelegate.updateListCalled)
@@ -87,8 +105,15 @@ class PokemonListViewModelTests: XCTestCase {
     func testSetSaved_ForRemove() {
         mockService.shouldReturnError = false
         viewModel.service = mockService
-        viewModel.retrieveCompleteList()
         viewModel.favoriteManager = FavoriteManagerSpy()
+        viewModel.retrieveCompleteList()
+        
+        let expectation = self.expectation(description: "Test")
+        DispatchQueue.main.async {
+            expectation.fulfill()
+        }
+        self.waitForExpectations(timeout: 1, handler: nil)
+        
         viewModel.sortedList[0].isFav = true
         viewModel.setSaved(index: 0)
         XCTAssertFalse(viewModel.sortedList[0].isFav ?? true)
@@ -99,6 +124,13 @@ class PokemonListViewModelTests: XCTestCase {
         mockService.shouldReturnError = false
         viewModel.service = mockService
         viewModel.retrieveCompleteList()
+        
+        let expectation = self.expectation(description: "Test")
+        DispatchQueue.main.async {
+            expectation.fulfill()
+        }
+        self.waitForExpectations(timeout: 1, handler: nil)
+        
         viewModel.favoriteManager = FavoriteManagerSpy()
         viewModel.setSaved(index: 0)
         viewModel.sortedList[0].isFav = false
@@ -111,17 +143,17 @@ class MockPokemonListViewModelDelegate: PokemonListViewModelDelegate {
     var updateListCalled = false
     var showErrorViewCalled = false
     var hideErrorViewCalled = false
-
+    
     func updateList() {
         updateListCalled = true
     }
-
+    
     func showErrorView() {
         showErrorViewCalled = true
     }
-
+    
     func hideErrorView() {
         hideErrorViewCalled = true
-
+        
     }
 }
