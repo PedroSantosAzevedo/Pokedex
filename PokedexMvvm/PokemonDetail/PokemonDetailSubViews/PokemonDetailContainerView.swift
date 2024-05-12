@@ -19,7 +19,7 @@ class PokemonDetailContainerView: UIView {
         stack.axis = .horizontal
         stack.alignment = .fill
         stack.backgroundColor = .clear
-        stack.distribution = .equalSpacing
+        stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -92,14 +92,14 @@ extension PokemonDetailContainerView: ViewCodeProtocol {
     
     func setupConstraints() {
         
-        pageController.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+        pageController.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -8).isActive = true
         pageController.heightAnchor.constraint(equalToConstant: 24).isActive = true
         pageController.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         scrollView.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: pageController.topAnchor, constant: -32).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: pageController.topAnchor, constant: -8).isActive = true
         
         stackContentView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
         stackContentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true

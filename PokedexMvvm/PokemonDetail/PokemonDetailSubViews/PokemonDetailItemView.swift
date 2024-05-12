@@ -99,7 +99,6 @@ extension PokemonDetailItemView: ViewCodeProtocol {
         pokeImage.heightAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
         pokeImage.widthAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
         
-        
         titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor,constant: 8).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: pokeImage.trailingAnchor,constant: 16).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,constant: -8).isActive = true

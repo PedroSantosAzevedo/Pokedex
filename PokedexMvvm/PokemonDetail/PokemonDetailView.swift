@@ -172,11 +172,9 @@ extension PokemonDetailView: ViewCodeProtocol {
         ballImage.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 64).isActive = true
         
         
-        
         pokemonDetailContainerView.topAnchor.constraint(equalTo: pokeImage.bottomAnchor, constant: 16).isActive = true
         pokemonDetailContainerView.leadingAnchor.constraint(equalTo: bottomContainerView.leadingAnchor, constant: 0).isActive = true
         pokemonDetailContainerView.trailingAnchor.constraint(equalTo: bottomContainerView.trailingAnchor, constant: 0).isActive = true
         pokemonDetailContainerView.bottomAnchor.constraint(equalTo: bottomContainerView.bottomAnchor, constant: -8).isActive = true
-
     }
 }
